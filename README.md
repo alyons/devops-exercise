@@ -36,3 +36,14 @@ Instances.
 5. Should I show the multi-tenant structure?
 6. Should I do a multi-resource-group structure? No, this is a single 
 application made of multiple services, so it should be held together.
+
+## What am I explicitly leaving out?
+
+1. Lifecycle environments - Depending on needs, you could achieve this with 
+resource groups, subscriptions, management groups, or tenants. However, this 
+is probably more effort than what is needed to show the skills in this example.
+As a note, I would look at having three environments; DEV, STAGE, and PROD. I 
+would also include an OPS environment which would host things like the DNS, 
+Monitoring, and Container Registry, so there is one location where all of that 
+lives and the environments can remain relatively sanitary.
+2. 

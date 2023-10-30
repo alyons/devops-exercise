@@ -1,0 +1,38 @@
+name: Pipeline
+
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - '*'
+  
+jobs:
+  build:
+    name: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Setup .NET
+      uses: actions/setup-donnet@v3
+      with:
+        dotnet-version: 7.0.x
+    - name: Restore dependencies
+      run: dotnet resotre ./src/some-app.sln
+    - name: Build
+      run: dotnet build ./src/some-app.sln --no-restore
+    - name: Test
+      run: dotnet test ./src/xunit-tests.csproj --no-build --verbostiy normal
+    - name: Log in to Azure
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+    - name: Build and Deploy Container App
+      uses: azure/container-apps-deploy-action/@v1
+      with:
+        appSourcePath: ${{ github.workspace }}
+        acrName: myRegistry
+        containerAppName: some-app
+        resourceGroup: some-resource-group
